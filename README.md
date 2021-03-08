@@ -19,20 +19,11 @@ A Mine Sweeper implementation using LibGDX.
 <img src="/screenshots/minesweeper02.png" width="100%"/><br/>
 
 
-## Run Desktop Application
+## Run
 
 ```bash
-gradle clean dist
-java -jar desktop/build/libs/desktop-1.0.jar
-```
-
-## Run Html Application
-
-```bash
-gradle clean dist
-# run local server to serve generated html app
-cd html/build/dist
-python -m SimpleHTTPServer
+gradle clean build
+java -jar build/libs/MineSweeper-1.0-SNAPSHOT.jar
 ```
 
 ### Super dev mode for debugging/testing

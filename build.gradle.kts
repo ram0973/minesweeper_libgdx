@@ -1,31 +1,36 @@
-import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
+import org.gradle.jvm.tasks.Jar
 
 plugins {
     java
-    kotlin("jvm") version "1.5.0-M1"
 }
 
 group = "org.ram0973"
 version = "1.0-SNAPSHOT"
-
 
 repositories {
     mavenCentral()
 }
 
 dependencies {
-    val gdxVersion: String = "1.9.14"
+    val gdxVersion = "1.9.14"
     testImplementation("junit", "junit", "4.12")
     implementation("com.badlogicgames.gdx:gdx:$gdxVersion")
     implementation("com.badlogicgames.gdx:gdx-backend-lwjgl3:$gdxVersion")
     implementation("com.badlogicgames.gdx:gdx-platform:$gdxVersion:natives-desktop")
-    implementation(kotlin("stdlib-jdk8"))
 }
-val compileKotlin: KotlinCompile by tasks
-compileKotlin.kotlinOptions {
-    jvmTarget = "1.8"
+
+val fatJar = task("fatJar", type = Jar::class) {
+    manifest {
+        attributes["Implementation-Title"] = "Minesweeper with LibGDX"
+        attributes["Main-Class"] = "minesweeper.MineSweeper"
+        duplicatesStrategy = DuplicatesStrategy.EXCLUDE
+    }
+    from(configurations.runtimeClasspath.get().map { if (it.isDirectory) it else zipTree(it) })
+    with(tasks.jar.get() as CopySpec)
 }
-val compileTestKotlin: KotlinCompile by tasks
-compileTestKotlin.kotlinOptions {
-    jvmTarget = "1.8"
+
+tasks {
+    "build" {
+        dependsOn(fatJar)
+    }
 }
